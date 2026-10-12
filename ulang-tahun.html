@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Selamat Ulang Tahun!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            --bg: #fff4f8;
+            --surface: #ffffff;
+            --ink: #2a1b3d;
+            --muted: #6b5a80;
+            --pink: #e8457f;
+            --mint: #14a58f;
+            --amber: #f5a300;
+            --line: #ecd9e6;
+            --cake1: #ff8fb6;
+            --cake2: #fff0c9;
+            --plate: #d9c9e6;
+        }
+        
+        @media (prefers-color-scheme:dark) {
+             :root:not([data-theme="light"]) {
+                --bg: #1f1230;
+                --surface: #2c1b44;
+                --ink: #fff4fa;
+                --muted: #c3b0da;
+                --pink: #ff6fa5;
+                --mint: #5eead4;
+                --amber: #ffc23d;
+                --line: #47306a;
+                --cake1: #ff6fa5;
+                --cake2: #ffe9b0;
+                --plate: #47306a;
+            }
+        }
+        
+        :root[data-theme="dark"] {
+            --bg: #1f1230;
+            --surface: #2c1b44;
+            --ink: #fff4fa;
+            --muted: #c3b0da;
+            --pink: #ff6fa5;
+            --mint: #5eead4;
+            --amber: #ffc23d;
+            --line: #47306a;
+            --cake1: #ff6fa5;
+            --cake2: #ffe9b0;
+            --plate: #47306a;
+        }
+        
+        html {
+            height: 100%;
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+        
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit
+        }
+        
+        body {
+            margin: 0;
+            min-height: 100%;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Nunito", system-ui, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+        
+        canvas#fx {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10
+        }
+        
+        main {
+            width: 100%;
+            max-width: 460px;
+            text-align: center
+        }
+        
+        h1 {
+            font-family: "Baloo 2", system-ui, sans-serif;
+            font-weight: 800;
+            line-height: 1.05;
+            margin: 0;
+            font-size: clamp(2.4rem, 11vw, 3.6rem)
+        }
+        
+        h1 .nama {
+            display: block;
+            color: var(--pink);
+            overflow-wrap: anywhere
+        }
+        
+        p {
+            margin: 0
+        }
+        
+        .card {
+            background: var(--surface);
+            border: 2px solid var(--line);
+            border-radius: 28px;
+            padding: 28px 22px
+        }
+        
+        label {
+            display: block;
+            text-align: left;
+            font-weight: 600;
+            margin: 16px 0 6px
+        }
+        
+        input,
+        textarea {
+            width: 100%;
+            font: inherit;
+            color: var(--ink);
+            background: var(--bg);
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 14px
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 84px
+        }
+        
+        input:focus-visible,
+        textarea:focus-visible,
+        button:focus-visible {
+            outline: 3px solid var(--mint);
+            outline-offset: 2px
+        }
+        
+        .btn {
+            font: 600 1.05rem "Nunito", sans-serif;
+            border: 0;
+            border-radius: 999px;
+            cursor: pointer;
+            padding: 14px 28px;
+            background: var(--pink);
+            color: #fff;
+            margin-top: 22px;
+            transition: transform .15s ease
+        }
+        
+        .btn:active {
+            transform: scale(.96)
+        }
+        
+        .btn.alt {
+            background: transparent;
+            color: var(--ink);
+            border: 2px solid var(--line);
+            margin-top: 10px;
+            padding: 10px 22px
+        }
+        
+        .hint {
+            color: var(--muted);
+            font-size: .95rem;
+            margin-top: 10px
+        }
+        
+        #cake {
+            width: min(280px, 80%);
+            height: auto;
+            display: block;
+            margin: 6px auto 0
+        }
+        
+        .flame {
+            transform-origin: center bottom;
+            transform-box: fill-box;
+            animation: flick .5s ease-in-out infinite alternate;
+            transition: opacity .35s, transform .35s
+        }
+        
+        .flame:nth-of-type(2) {
+            animation-delay: .15s
+        }
+        
+        .flame:nth-of-type(3) {
+            animation-delay: .3s
+        }
+        
+        .out .flame {
+            opacity: 0;
+            transform: scale(.2);
+            animation: none
+        }
+        
+        .smoke {
+            opacity: 0
+        }
+        
+        .out .smoke {
+            animation: smoke 1.4s ease-out forwards
+        }
+        
+        @keyframes flick {
+            from {
+                transform: scale(1) rotate(-3deg)
+            }
+            to {
+                transform: scale(1.12, 1.2) rotate(3deg)
+            }
+        }
+        
+        @keyframes smoke {
+            0% {
+                opacity: .7;
+                transform: translateY(0)
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-26px)
+            }
+        }
+        
+        .wish {
+            margin-top: 18px;
+            white-space: pre-line;
+            overflow-wrap: anywhere
+        }
+        
+        .msg {
+            display: none;
+            margin-top: 18px
+        }
+        
+        .done .msg {
+            display: block
+        }
+        
+        .done .tiup {
+            display: none
+        }
+        
+        .hidden {
+            display: none!important
+        }
+        
+        .share {
+            margin-top: 18px;
+            text-align: left
+        }
+        
+        .share input {
+            font-size: .9rem
+        }
+        
+        @media (prefers-reduced-motion:reduce) {
+            .flame,
+            .out .smoke {
+                animation: none
+            }
+            .btn {
+                transition: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="fx" aria-hidden="true"></canvas>
+    <main>
+
+        <!-- Formulir pembuat ucapan -->
+        <section id="form" class="card hidden">
+            <h1 style="font-size:2rem">Buat ucapan ulang tahun</h1>
+            <p class="hint">Isi data, lalu bagikan tautannya ke yang berulang tahun.</p>
+            <label for="inNama">Nama</label>
+            <input id="inNama" maxlength="40" placeholder="Contoh: Sari" autocomplete="off">
+            <label for="inUmur">Umur (opsional)</label>
+            <input id="inUmur" type="number" min="1" max="120" inputmode="numeric" placeholder="Contoh: 25">
+            <label for="inPesan">Pesan</label>
+            <textarea id="inPesan" maxlength="300" placeholder="Semoga sehat selalu dan semua impianmu terwujud."></textarea>
+            <button class="btn" id="btnBuat" type="button">Buat ucapan</button>
+        </section>
+
+        <!-- Kartu ucapan -->
+        <section id="kartu" class="card hidden">
+            <h1>Selamat ulang tahun<span class="nama" id="outNama"></span></h1>
+            <p class="hint" id="outUmur"></p>
+
+            <svg id="cake" viewBox="0 0 280 230" role="img" aria-label="Kue ulang tahun dengan tiga lilin">
+      <ellipse cx="140" cy="206" rx="124" ry="14" fill="var(--plate)"/>
+      <rect x="40" y="140" width="200" height="62" rx="14" fill="var(--cake1)"/>
+      <path d="M40 158c20 16 40-6 60 8s40-6 60 8 40-6 60 8 20-6 20-6v-24H40z" fill="var(--cake2)"/>
+      <rect x="70" y="100" width="140" height="48" rx="12" fill="var(--cake2)"/>
+      <path d="M70 118c18 14 36-4 54 8s36-4 54 8 22-6 32-4v-18H70z" fill="var(--cake1)"/>
+      <g>
+        <rect x="98" y="62" width="9" height="40" rx="3" fill="var(--mint)"/>
+        <rect x="135" y="56" width="9" height="46" rx="3" fill="var(--amber)"/>
+        <rect x="172" y="62" width="9" height="40" rx="3" fill="var(--mint)"/>
+      </g>
+      <path class="flame" d="M102.5 40c7 8 7 16 0 20-7-4-7-12 0-20z" fill="var(--amber)"/>
+      <path class="flame" d="M139.5 34c7 8 7 16 0 20-7-4-7-12 0-20z" fill="var(--amber)"/>
+      <path class="flame" d="M176.5 40c7 8 7 16 0 20-7-4-7-12 0-20z" fill="var(--amber)"/>
+      <g class="smoke" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round">
+        <path d="M102 54c-4-6 4-10 0-16"/><path d="M139 48c-4-6 4-10 0-16"/><path d="M176 54c-4-6 4-10 0-16"/>
+      </g>
+    </svg>
+
+            <button class="btn tiup" id="btnTiup" type="button">Tiup lilinnya</button>
+            <p class="hint tiup">Ketuk tombol untuk meniup lilin dan membuat permohonan.</p>
+
+            <div class="msg" id="msgBox">
+                <p class="wish" id="outPesan"></p>
+            </div>
+
+            <div class="share">
+                <label for="outLink">Tautan untuk dibagikan</label>
+                <input id="outLink" readonly>
+                <button class="btn alt" id="btnSalin" type="button">Salin tautan</button>
+                <button class="btn alt" id="btnBaru" type="button">Buat ucapan baru</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        (function() {
+            var $ = function(id) {
+                return document.getElementById(id)
+            };
+            var form = $("form"),
+                kartu = $("kartu");
+
+            // Baca data dari hash URL: #n=Nama&u=25&p=Pesan
+            function bacaData() {
+                try {
+                    var h = location.hash.replace(/^#/, "");
+                    if (!h) return null;
+                    var q = new URLSearchParams(h);
+                    var n = (q.get("n") || "").trim();
+                    if (!n) return null;
+                    return {
+                        n: n.slice(0, 40),
+                        u: parseInt(q.get("u"), 10) || 0,
+                        p: (q.get("p") || "").slice(0, 300)
+                    };
+                } catch (e) {
+                    return null
+                }
+            }
+
+            function tampilkan(d) {
+                form.classList.add("hidden");
+                kartu.classList.remove("hidden", "done", "out");
+                $("outNama").textContent = d.n + "!";
+                $("outUmur").textContent = d.u ? ("Selamat memasuki usia " + d.u + " tahun") : "";
+                $("outPesan").textContent = d.p || "Semoga hari ini penuh tawa dan tahun ini penuh kabar baik.";
+                var base = location.href.split("#")[0];
+                var q = new URLSearchParams({
+                    n: d.n
+                });
+                if (d.u) q.set("u", d.u);
+                if (d.p) q.set("p", d.p);
+                $("outLink").value = base + "#" + q.toString();
+                document.title = "Selamat ulang tahun, " + d.n + "!";
+            }
+
+            function tampilkanForm() {
+                kartu.classList.add("hidden");
+                form.classList.remove("hidden");
+            }
+
+            // Konfeti sederhana
+            var cv = $("fx"),
+                cx = cv.getContext("2d"),
+                parts = [],
+                raf = null;
+
+            function resize() {
+                cv.width = innerWidth * devicePixelRatio;
+                cv.height = innerHeight * devicePixelRatio
+            }
+            addEventListener("resize", resize);
+            resize();
+            var warna = ["#e8457f", "#ff6fa5", "#14a58f", "#5eead4", "#f5a300", "#ffc23d", "#8b5cf6"];
+
+            function konfeti() {
+                if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                for (var i = 0; i < 140; i++) {
+                    parts.push({
+                        x: innerWidth / 2 + (Math.random() - .5) * 120,
+                        y: innerHeight * .45,
+                        vx: (Math.random() - .5) * 14,
+                        vy: -Math.random() * 14 - 4,
+                        s: Math.random() * 8 + 4,
+                        r: Math.random() * 6,
+                        vr: (Math.random() - .5) * .4,
+                        c: warna[i % warna.length],
+                        life: 0
+                    });
+                }
+                if (!raf) raf = requestAnimationFrame(loop);
+            }
+
+            function loop() {
+                var d = devicePixelRatio;
+                cx.clearRect(0, 0, cv.width, cv.height);
+                parts = parts.filter(function(p) {
+                    return p.y < innerHeight + 30 && p.life < 300
+                });
+                parts.forEach(function(p) {
+                    p.vy += .35;
+                    p.vx *= .99;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.r += p.vr;
+                    p.life++;
+                    cx.save();
+                    cx.translate(p.x * d, p.y * d);
+                    cx.rotate(p.r);
+                    cx.fillStyle = p.c;
+                    cx.fillRect(-p.s * d / 2, -p.s * d / 4, p.s * d, p.s * d / 2);
+                    cx.restore();
+                });
+                raf = parts.length ? requestAnimationFrame(loop) : null;
+            }
+
+            // Interaksi
+            $("btnBuat").onclick = function() {
+                var n = $("inNama").value.trim();
+                if (!n) {
+                    $("inNama").focus();
+                    $("inNama").placeholder = "Nama wajib diisi";
+                    return
+                }
+                var d = {
+                    n: n,
+                    u: parseInt($("inUmur").value, 10) || 0,
+                    p: $("inPesan").value.trim()
+                };
+                var q = new URLSearchParams({
+                    n: d.n
+                });
+                if (d.u) q.set("u", d.u);
+                if (d.p) q.set("p", d.p);
+                try {
+                    history.replaceState(null, "", "#" + q.toString())
+                } catch (e) {}
+                tampilkan(d);
+            };
+            $("btnTiup").onclick = function() {
+                kartu.classList.add("out", "done");
+                konfeti();
+                $("msgBox").scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest"
+                });
+            };
+            $("btnSalin").onclick = function() {
+                var el = $("outLink"),
+                    b = $("btnSalin");
+                el.select();
+                var ok = false;
+                try {
+                    ok = document.execCommand("copy")
+                } catch (e) {}
+                if (!ok && navigator.clipboard) {
+                    navigator.clipboard.writeText(el.value).then(function() {
+                        b.textContent = "Tautan disalin"
+                    }, function() {})
+                }
+                b.textContent = ok ? "Tautan disalin" : "Tekan lama untuk menyalin";
+            };
+            $("btnBaru").onclick = function() {
+                try {
+                    history.replaceState(null, "", location.href.split("#")[0])
+                } catch (e) {}
+                tampilkanForm();
+            };
+            addEventListener("hashchange", function() {
+                var d = bacaData();
+                d ? tampilkan(d) : tampilkanForm()
+            });
+
+            var awal = bacaData();
+            awal ? tampilkan(awal) : tampilkanForm();
+        })();
+    </script>
+</body>
+
+</html>
